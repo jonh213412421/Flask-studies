@@ -1,0 +1,28 @@
+#page that sends requests to app
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Page</title>
+</head>
+<body>
+    <h2>Choose One</h2>
+    <button onclick="gethelp()">Help</button>
+    <button onclick="getip()">Server IP</button>
+    <button onclick="geturl()">Url</button>
+    <iframe id="display" width="100%" height="500px" frameborder="0"></iframe>
+    <iframe id="screen" width="100%" height="500px" frameborder="0"></iframe>
+    <script>
+        function gethelp() {
+            document.getElementById('display').src = "/help";
+        }
+        function getip() {
+            document.getElementById('display').src = "/ipconfig"
+        }
+        function geturl() {
+            document.getElementById('display').src = "/nave?url=https://www.google.com"
+        }
+    </script>
+
+</body>
+</html>
