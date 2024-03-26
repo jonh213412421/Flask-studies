@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy Example</title>
+    <script>
+        function loadPage(url) {
+            document.getElementById("embeddedPage").src = "http://localhost/proxy.php?url=" + encodeURIComponent(url);
+        }
+
+    </script>
+</head>
+<body>
+    <h1>Proxy Example</h1>
+    <p>Enter the address you want to embed:</p>
+    <input type="text" id="addressInput" style="width: 80%;" placeholder="Enter address">
+    <button onclick="loadPage(document.getElementById('addressInput').value)">Go</button>
+    <br><br>
+    <iframe id="embeddedPage" style="width:100%; height:500px;"></iframe>
+</body>
+</html>
