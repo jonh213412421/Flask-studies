@@ -83,5 +83,19 @@ def download(link):
     conteudo = conteudo.hex()
     return conteudo
 
+#baixa porção de arquivo e envia hex
+@app.route('/download_p/<path:start>/<path:end>/<path:link>')
+def dowload_p(link, start, end):
+    nome = str(link).split("/")[-1]
+    headers = {
+        'Range': f'bytes={start}-{end}'
+    }
+    conteudo = requests.get(link, headers=headers).content
+    with open(f"{nome}-{start}-{end}", "wb") as f:
+        f.write(conteudo)
+        f.close()
+    conteudo = conteudo.hex()
+    return conteudo
+
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
