@@ -1,19 +1,72 @@
 from flask import Flask
 import requests
-import subprocess
 import os
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 
-# Rota para scrape
-# exemplo: /scrape/www.exemplo.com
+# ajuda
+@app.route('/h')
+def ajuda():
+    ajuda = r"""
+    Funções:<br><br>
+    /math/path:expression retorna o resultado da expressão;<br>
+    /scrape/<path:url> retorna url;<br>
+    /upload/<path:file> faz upload de arquivo local em hex;<br>
+    /ls lista arquivos locais;<br>
+    /tamanho/<path:link> retorna o tamanho do arquivo do link fornecido;<br>
+    /download/<path:link> baixa o arquivo e retorna o hex dele;<br>
+    /download_p/<path:start>/<path:end>/<path:link> baixa parte do arquivo e retorna o hex dele;<br>
+    /script_juntar retorna script para juntar arquivos.<br><br>
+    """
+    return ajuda
+
+# calculadora
+@app.route('/math/path:expression')
+def math(expression):
+    resultado = "Resultado: " + eval(expression)
+    return resultado
+
+# script para juntar arquivos. Testar
+@app.route('/script_juntar')
+def juntar():
+    juntar = r"""
+        def hex_to_binary(hex_value):
+        binary_value = bin(int(hex_value, 16))[2:]
+        return binary_value.zfill(8)
+        
+        input_file_path = 'input.txt'
+        output_file_path = 'output.txt'
+        
+
+        with open(input_file_path, 'r') as input_file:
+            hex_values = input_file.readlines()
+        
+        binary_values = []
+        
+        for hex_value in hex_values:
+            hex_value = hex_value.strip()
+            if hex_value:
+                binary_value = hex_to_binary(hex_value)
+                binary_values.append(binary_value)
+        
+        with open(output_file_path, 'w') as output_file:
+            for binary_value in binary_values:
+                output_file.write(binary_value + '\n')
+    """
+    return juntar
+
+# Rota para scrape. Tentar usar curl no futuro
 @app.route('/scrape/<path:url>')
 def scrape_page(url):
-    html = subprocess.run(['curl', url], capture_output=True)
-    soup = BeautifulSoup(html.stdout, 'html.parser')
-    print(soup)
-    return str(soup)
+    url = "https://" + url
+    try:
+        html = requests.get(url)
+        soup = BeautifulSoup(html.text, 'html.parser')
+        print(soup)
+        return str(soup)
+    except Exception as e:
+        return e
 
 # faz upload
 @app.route('/upload/<path:file>')
