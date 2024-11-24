@@ -73,10 +73,9 @@ def juntar():
 def scrape_page(url):
     url = "https://" + url
     try:
-        html = requests.get(url)
-        soup = BeautifulSoup(html.text, 'html.parser')
-        print(soup)
-        return str(soup)
+        html = subprocess.run(["curl", url], capture_output=True)
+        html = BeautifulSoup(html.stdout.decode())
+        return html
     except Exception as e:
         return e
 
