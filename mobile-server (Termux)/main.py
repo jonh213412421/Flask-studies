@@ -21,7 +21,7 @@ def run():
 def ajuda():
     ajuda = r"""
     Funções:<br><br>
-    /math/path:expression retorna o resultado da expressão;<br>
+    /math/<path:expression> retorna o resultado da expressão;<br>
     /scrape/<path:url> retorna url;<br>
     /upload/<path:file> faz upload de arquivo local em hex;<br>
     /ls lista arquivos locais;<br>
