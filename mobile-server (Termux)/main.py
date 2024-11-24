@@ -1,9 +1,25 @@
 from flask import Flask
 import requests
 import os
+import subprocess
 from bs4 import BeautifulSoup
+import threading
+import json
 
 app = Flask(__name__)
+
+# começa o ngrok
+def ngrok():
+    os.chdir(r"C:\Users\Joao\Desktop")
+    subprocess.Popen(["ngrok", "http", "5000"])
+
+    resposta = requests.get("http://localhost:4040/api/tunnels").text
+    resposta = json.loads(resposta)
+    print(resposta['tunnels'][0]['public_url'])
+
+# roda o app
+def run():
+    app.run()
 
 # ajuda
 @app.route('/h')
@@ -120,4 +136,10 @@ def dowload_p(link, start, end):
     return conteudo
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # múltiplas threads
+    thread1 = threading.Thread(target=ngrok)
+    thread1.start()
+    thread2 = threading.Thread(target=run)
+    thread2.start()
+    thread1.join()
+    thread2.join()
