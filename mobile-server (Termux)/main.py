@@ -4,18 +4,13 @@ import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
-import json
 
 app = Flask(__name__)
 
-# começa o ngrok
+# começa o ngrok. É necessário criar uma chave rsa no Termux e passar para o ngrok no seguinte link: https://dashboard.ngrok.com/ssh-keys
+# ajuste a porta no localhost:5000
 def ngrok():
-    os.chdir(r"C:\Users\Joao\Desktop")
-    subprocess.Popen(["ngrok", "http", "5000"])
-
-    resposta = requests.get("http://localhost:4040/api/tunnels").text
-    resposta = json.loads(resposta)
-    print(resposta['tunnels'][0]['public_url'])
+    subprocess.Popen(["ssh", "-R", "443:localhost:5000", "v2@connect.ngrok-agent.com", "http"])
 
 # roda o app
 def run():
@@ -38,9 +33,10 @@ def ajuda():
     return ajuda
 
 # calculadora
-@app.route('/math/path:expression')
+@app.route('/math/<path:expression>')
 def math(expression):
-    resultado = "Resultado: " + eval(expression)
+    print(expression)
+    resultado = f"Resultado: {eval(expression)}"
     return resultado
 
 # script para juntar arquivos. Testar
