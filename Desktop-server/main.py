@@ -10,7 +10,7 @@ app = Flask(__name__)
 # começa o ngrok. É necessário criar uma chave rsa no Termux e passar para o ngrok no seguinte link: https://dashboard.ngrok.com/ssh-keys
 # ajuste a porta no terceiro argumento do Popen
 def ngrok():
-    #ajustar para local do executável do ngrok
+    #ajustar para local do executável do ngrok. IMPORTANTE
     os.chdir(r"")
     subprocess.Popen(["ngrok", "http", "5000"])
     #link com json da porta
