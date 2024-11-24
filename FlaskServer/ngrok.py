@@ -1,3 +1,4 @@
+# amostra de código usando a biblioteca ngrok
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import logging
 import ngrok
