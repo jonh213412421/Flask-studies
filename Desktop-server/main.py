@@ -8,15 +8,9 @@ import threading
 app = Flask(__name__)
 
 # começa o ngrok. É necessário criar uma chave rsa no Termux e passar para o ngrok no seguinte link: https://dashboard.ngrok.com/ssh-keys
-# ajuste a porta no terceiro argumento do Popen
+# ajuste a porta no localhost:5000
 def ngrok():
-    #ajustar para local do executável do ngrok. IMPORTANTE
-    os.chdir(r"")
-    subprocess.Popen(["ngrok", "http", "5000"])
-    #link com json da porta
-    resposta = requests.get("http://localhost:4040/api/tunnels").text
-    resposta = json.loads(resposta)
-    print(resposta['tunnels'][0]['public_url'])
+    subprocess.Popen(["ssh", "-R", "443:localhost:5000", "v2@connect.ngrok-agent.com", "http"])
 
 # roda o app
 def run():
@@ -49,28 +43,13 @@ def math(expression):
 @app.route('/script_juntar')
 def juntar():
     juntar = r"""
-        def hex_to_binary(hex_value):
-        binary_value = bin(int(hex_value, 16))[2:]
-        return binary_value.zfill(8)
-        
-        input_file_path = 'input.txt'
-        output_file_path = 'output.txt'
-        
-
-        with open(input_file_path, 'r') as input_file:
-            hex_values = input_file.readlines()
-        
-        binary_values = []
-        
-        for hex_value in hex_values:
-            hex_value = hex_value.strip()
-            if hex_value:
-                binary_value = hex_to_binary(hex_value)
-                binary_values.append(binary_value)
-        
-        with open(output_file_path, 'w') as output_file:
-            for binary_value in binary_values:
-                output_file.write(binary_value + '\n')
+        with open(r"preencher com o caminho do arquivo txt", "r") as f:
+            hex = f.read()
+            f.close()
+        bin = bytes.fromhex(hex)
+        with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
+            f.write(bin)
+            f.close()
     """
     return juntar
 
@@ -81,7 +60,6 @@ def scrape_page(url):
     try:
         html = requests.get(url)
         soup = BeautifulSoup(html.text, 'html.parser')
-        print(soup)
         return str(soup)
     except Exception as e:
         return e
