@@ -42,29 +42,15 @@ def math(expression):
 # script para juntar arquivos. Testar
 @app.route('/script_juntar')
 def juntar():
+    # script para juntar os arquivos baixados em hex
     juntar = r"""
-        def hex_to_binary(hex_value):
-        binary_value = bin(int(hex_value, 16))[2:]
-        return binary_value.zfill(8)
-        
-        input_file_path = 'input.txt'
-        output_file_path = 'output.txt'
-        
-
-        with open(input_file_path, 'r') as input_file:
-            hex_values = input_file.readlines()
-        
-        binary_values = []
-        
-        for hex_value in hex_values:
-            hex_value = hex_value.strip()
-            if hex_value:
-                binary_value = hex_to_binary(hex_value)
-                binary_values.append(binary_value)
-        
-        with open(output_file_path, 'w') as output_file:
-            for binary_value in binary_values:
-                output_file.write(binary_value + '\n')
+        with open(r"preencher com o caminho do arquivo txt", "r") as f:
+            hex = f.read()
+            f.close()
+        bin = bytes.fromhex(hex)
+        with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
+            f.write(bin)
+            f.close()
     """
     return juntar
 
