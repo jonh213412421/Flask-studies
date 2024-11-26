@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Função para adicionar uma mensagem
+        function sendMessage(event) {
+            event.preventDefault();  // segura o default form submission
+
+            const message = document.getElementById("message").value;
+            if (message.trim() === "") return;
+
+            fetch("/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "message=" + encodeURIComponent(message)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear the input field
+                document.getElementById("message").value = "";
+                // Update the messages display
+                updateMessages(data.messages);
+            });
+        }
+
+        // atualiza mensagens na tela
+        function updateMessages(messages) {
+            const messageContainer = document.getElementById("messages");
+            messageContainer.innerHTML = "";  // tem como ficar mais eficiente? Acho que sim
+
+            messages.forEach((message, index) => {
+                const messageElement = document.createElement("li");
+
+                // checa se mensagem é do usuário ou do servidor
+                if (index % 2 === 0) { //a mensagem é par ou ímpar?
+                    messageElement.classList.add("user-message");  //adiciona classe à mensagem (para alinhamento)
+                } else {
+                    messageElement.classList.add("server-message");  //adiciona classe à mensagem (para alinhamento)
+                }
+
+                messageElement.textContent = message;
+                messageContainer.appendChild(messageElement);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Chat</h1>
+
+    <!-- Display -->
+    <ul id="messages">
+        {% for message in messages %}
+            <li class="{{ 'user-message' if loop.index0 % 2 == 0 else 'server-message' }}">
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Formulário de input -->
+    <form onsubmit="sendMessage(event)">
+        <input type="text" id="message" placeholder="Digite uma dúvida..." required>
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
