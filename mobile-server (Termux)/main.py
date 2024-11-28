@@ -44,6 +44,7 @@ def math(expression):
 def juntar():
     # script para juntar os arquivos baixados em hex
     juntar = r"""
+        python:
         with open(r"preencher com o caminho do arquivo txt", "r") as f:
             hex = f.read()
             f.close()
@@ -51,6 +52,8 @@ def juntar():
         with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
             f.write(bin)
             f.close()
+        cmd: 
+        certutil -decodehex "preencher com o caminho do arquivo txt" "preencher com o caminho do arquivo de saída"
     """
     return juntar
 
