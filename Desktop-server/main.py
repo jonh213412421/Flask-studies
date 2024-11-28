@@ -51,7 +51,7 @@ def juntar():
         with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
             f.write(bin)
             f.close()
-        cmd: 
+        cmd windows: 
         certutil -decodehex "preencher com o caminho do arquivo txt" "preencher com o caminho do arquivo de saída"
     """
     return juntar
