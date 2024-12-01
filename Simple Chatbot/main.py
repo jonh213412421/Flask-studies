@@ -38,12 +38,12 @@ def index():
 
             elif ops == ['1', '1', '2']:
                 bot_message = """
-                Etapa 1: Reunir os seguintes documentos:\n
-                a) Lista de documentos:\n
-                b) Memorial Descritivo do imóvel;\n
-                c) Planta Topográfica Georreferenciada;\n
-                d) ART do responsável técnico;\n\n
-                Etapa 2: Enviar documentos por e-mail:\n
+                Etapa 1: Reunir os seguintes documentos:<br>
+                a) Lista de documentos:<br>
+                b) Memorial Descritivo do imóvel;<br>
+                c) Planta Topográfica Georreferenciada;<br>
+                d) ART do responsável técnico;<br><br>
+                Etapa 2: Enviar documentos por e-mail:<br>
                 imoveis@planejamento.mg.gov.br 
                 """
                 next_options = ["Quero saber outra informação", "Voltar ao menu inicial"]
@@ -86,22 +86,22 @@ def index():
 
             elif ops == ['1', '2', '2']:
                 bot_message = """
-                Etapa 1: Reunir os seguintes documentos:\n
-                a) identificação do solicitante do trabalho;\n
-                b) objetivo da avaliação;\n
-                c) finalidade da avaliação;\n
-                d) identificação e caracterização do bem avaliando;\n
-                e) documentação utilizada para a avaliação;\n
-                f) pressupostos e condições limitantes da avaliação;\n
-                g) dados e informações efetivamente utilizados;\n
-                h) memória de cálculo;\n 
-                i) indicação do(s) método(s) utilizado(s), com justificativa da escolha;\n
-                j) especificação da avaliação; (quanto a grau de fundamentação e precisão);\n 
-                k) resultado da avaliação e sua data de referência;\n
-                l) qualificação legal completa e assinatura do(s) responsável(is) técnico(s) pela avaliação;\n
-                m) local e data da elaboração do laudo;\n
-                n) fotos, e outros requisitos previstos nas demais partes da Norma.\n\n
-                Etapa 2: Enviar documentos por e-mail:\n
+                Etapa 1: Reunir os seguintes documentos:<br>
+                a) identificação do solicitante do trabalho;<br>
+                b) objetivo da avaliação;<br>
+                c) finalidade da avaliação;<br>
+                d) identificação e caracterização do bem avaliando;<br>
+                e) documentação utilizada para a avaliação;<br>
+                f) pressupostos e condições limitantes da avaliação;<br>
+                g) dados e informações efetivamente utilizados;<br>
+                h) memória de cálculo;<br>
+                i) indicação do(s) método(s) utilizado(s), com justificativa da escolha;<br>
+                j) especificação da avaliação; (quanto a grau de fundamentação e precisão);<br>
+                k) resultado da avaliação e sua data de referência;<br>
+                l) qualificação legal completa e assinatura do(s) responsável(is) técnico(s) pela avaliação;<br>
+                m) local e data da elaboração do laudo;<br>
+                n) fotos, e outros requisitos previstos nas demais partes da Norma.<br><br>
+                Etapa 2: Enviar documentos por e-mail:<br>
                 imoveis@planejamento.mg.gov.br
                 """
                 next_options = ["Quero saber outra informação", "Voltar ao menu inicial"]
