@@ -1,1 +1,23 @@
+//armazene os videos em "static"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player</title>
+</head>
+<body>
+    <h1>Enter Video Path</h1>
+    {% if video_path %}
+    <h2>Video Player</h2>
+    <video width="640" height="360" controls>
+        <source src="{{ url_for('static', filename=video_path) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% elif video_path is not none %}
+    <p>Invalid video path. Please try again with a valid video file.</p>
+    {% endif %}
+
+</body>
+</html>
 
