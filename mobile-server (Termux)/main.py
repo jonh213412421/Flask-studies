@@ -4,6 +4,7 @@ import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
+import base64
 
 app = Flask(__name__)
 
@@ -73,9 +74,9 @@ def scrape_page(url):
 def upload(file):
     with open(file, "rb") as f:
         bin = f.read()
-        hex = bin.hex()
+        bas64 = base64.b64encode(bin)
         f.close()
-    return hex
+    return bas64
 
 # show video located in static
 @app.route('/video/<path:url>')
@@ -108,7 +109,7 @@ def download(link):
     with open(nome, "wb") as f:
         f.write(conteudo)
         f.close()
-    conteudo = conteudo.hex()
+    conteudo = base64.b64encode(conteudo)
     return conteudo
 
 #baixa porção de arquivo e envia hex
@@ -122,7 +123,7 @@ def dowload_p(link, start, end):
     with open(f"{nome}-{start}-{end}", "wb") as f:
         f.write(conteudo)
         f.close()
-    conteudo = conteudo.hex()
+    conteudo = base64.b64encode(conteudo)
     return conteudo
 
 if __name__ == '__main__':
