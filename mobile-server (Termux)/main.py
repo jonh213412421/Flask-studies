@@ -4,6 +4,7 @@ import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
+import base64
 
 app = Flask(__name__)
 
@@ -73,9 +74,9 @@ def scrape_page(url):
 def upload(file):
     with open(file, "rb") as f:
         bin = f.read()
-        hex = bin.hex()
+        b64 = base64.b64encode(bin)
         f.close()
-    return hex
+    return b64
 
 # lista dir
 @app.route('/ls')
