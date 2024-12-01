@@ -44,7 +44,7 @@ def math(expression):
 @app.route('/script_juntar')
 def juntar():
     juntar = r"""
-        python:
+        código:
         with open(r"preencher com o caminho do arquivo txt", "r") as f:
             hex = f.read()
             f.close()
@@ -52,8 +52,9 @@ def juntar():
         with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
             f.write(bin)
             f.close()
-        cmd windows: 
-        certutil -decodehex "preencher com o caminho do arquivo txt" "preencher com o caminho do arquivo de saída"
+            
+        cmd: 
+        certutil -decodehex test.txt output.pdf 
     """
     return juntar
 
@@ -73,9 +74,15 @@ def scrape_page(url):
 def upload(file):
     with open(file, "rb") as f:
         bin = f.read()
-        b64 = base64.b64encode(bin)
+        bas64 = base64.b64encode(bin)
         f.close()
-    return b64
+    return bas64
+
+# show video located in static
+@app.route('/video/<path:url>')
+def video(url):
+    video_path = url
+    return render_template("index2.html", video_path=video_path)
 
 # lista dir
 @app.route('/ls')
@@ -102,7 +109,7 @@ def download(link):
     with open(nome, "wb") as f:
         f.write(conteudo)
         f.close()
-    conteudo = conteudo.hex()
+    conteudo = base64.b64encode(conteudo)
     return conteudo
 
 #baixa porção de arquivo e envia hex
@@ -116,7 +123,7 @@ def dowload_p(link, start, end):
     with open(f"{nome}-{start}-{end}", "wb") as f:
         f.write(conteudo)
         f.close()
-    conteudo = conteudo.hex()
+    conteudo = base64.b64encode(conteudo)
     return conteudo
 
 if __name__ == '__main__':
