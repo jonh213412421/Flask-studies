@@ -4,6 +4,7 @@ import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
+import base64
 
 app = Flask(__name__)
 
