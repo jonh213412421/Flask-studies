@@ -25,6 +25,7 @@ def index():
 
             # Árvore de respostas
             if ops == ['1']:
+                messages.append({"sender": "user", "text": "Tenho uma dúvida!"})
                 bot_message = "Ok! Estou aqui para ajudar. Escolha o tópico que gerou a dúvida:"
                 next_options = ["Manifestação do Estado como Confrontante", "Validação de laudos",
                                 "Voltar ao menu inicial"]
