@@ -2,14 +2,16 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 ops = []
+messages = []
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    global ops
+    global ops, messages
 
-    messages = [
-        {"sender": "bot", "text": "Olá! Como posso ajudar?"}
-    ]
+    if messages == []:
+        messages = [
+            {"sender": "bot", "text": "Olá! Como posso ajudar?"}
+        ]
 
     next_options = ["Tenho uma dúvida!"]
 
