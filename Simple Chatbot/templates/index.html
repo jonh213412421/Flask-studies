@@ -47,7 +47,7 @@
 
         .bot {
             background-color: #e1e1e1;
-            align-self: flex-start;
+            align-self: justify;
         }
 
         .user {
@@ -93,7 +93,7 @@
         <!-- Displaying all messages dynamically -->
         {% for message in messages %}
             <div class="chat-bubble {% if message.sender == 'bot' %}bot{% else %}user{% endif %}">
-                {{ message.text }}
+                {{ message.text | safe }}
             </div>
         {% endfor %}
     </div>
