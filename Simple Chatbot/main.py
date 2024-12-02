@@ -32,14 +32,17 @@ def index():
 
             # Manifestação do Estado como Confrontante
             elif ops == ['1', '1']:
+                messages.append({"sender": "user", "text": "Manifestação do Estado como Confrontante"})
                 bot_message = "O que você quer saber sobre Manifestação do Estado como Confrontante?"
                 next_options = ["O que é?", "Etapas"]
 
             elif ops == ['1', '1', '1']:
+                messages.append({"sender": "user", "text": "O que é?"})
                 bot_message = "A Manifestação de Confrontante deve ser solicitada quando ocorrer retificação de área ou pedido de usucapião que podem afetar terras ou imóveis públicos do Estado de Minas Gerais. Uma vez que imóveis públicos são inalienáveis, é fundamental ter a anuência do Estado nesses casos."
                 next_options = ["Quero saber outra informação", "Voltar ao menu inicial"]
 
             elif ops == ['1', '1', '2']:
+                messages.append({"sender": "user", "text": "Etapas"})
                 bot_message = """
                 Etapa 1: Reunir os seguintes documentos:<br>
                 a) Lista de documentos:<br>
@@ -75,10 +78,12 @@ def index():
 
             # Validação de Laudos
             elif ops == ['1', '2']:
+                messages.append({"sender": "user", "text": "Validação de laudos"})
                 bot_message = "O que você quer saber sobre Validação de laudos?"
                 next_options = ["O que é?", "Etapas"]
 
             elif ops == ['1', '2', '1']:
+                messages.append({"sender": "user", "text": "O que é?"})
                 bot_message = """
                 Procedimento pelo qual a SEPLAG/SCI valida um laudo de avaliação produzido por um terceiro. O laudo de avaliação validado pela SEPLAG/SCI é pré-requisito para os processos de autorização e permissão de uso, cessão de uso, entre outros. Para a validação do laudo ocorrer sem problemas, é preciso que o profissional que elabora o laudo:
                 atenda as normas contidas no Decreto Estadual n°46.467, de 28/03/2014, e no Decreto Estadual nº 48.280, de 08/10/2021; 
@@ -88,6 +93,7 @@ def index():
                 next_options = ["Quero saber outra informação", "Voltar ao menu inicial"]
 
             elif ops == ['1', '2', '2']:
+                messages.append({"sender": "user", "text": "Etapas"})
                 bot_message = """
                 Etapa 1: Reunir os seguintes documentos:<br>
                 a) identificação do solicitante do trabalho;<br>
