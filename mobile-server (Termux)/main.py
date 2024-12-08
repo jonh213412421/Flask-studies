@@ -49,15 +49,16 @@ def juntar():
     juntar = r"""
         código:
         with open(r"preencher com o caminho do arquivo txt", "r") as f:
-            hex = f.read()
+            b64 = f.read()
             f.close()
-        bin = bytes.fromhex(hex)
+        bin = base64.decode(b64)
         with open(r"preencher com o caminho do arquivo de saída", "wb") as f:
             f.write(bin)
             f.close()
             
         cmd: 
         certutil -decodehex test.txt output.pdf 
+        certutil -decode test.txt output.pdf 
     """
     return juntar
 
