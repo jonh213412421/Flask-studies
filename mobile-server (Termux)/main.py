@@ -14,6 +14,13 @@ app = Flask(__name__)
 # ajuste a porta no localhost:5000
 def ngrok():
     subprocess.Popen(["ssh", "-R", "443:localhost:5000", "v2@connect.ngrok-agent.com", "http"])
+    subprocess.run(["pip", "install", "qbittorrent-api"])
+    subprocess.run(["pkg", "install", "proot"])
+    subprocess.run(["pkg", "install", "proot-distro"])
+    subprocess.run(["proot-distro", "install", "ubuntu"])
+    subprocess.run(["proot-distro", "login", "ubuntu"])
+    subprocess.run(["apt", "install", "-y", "qbittorrent-nox"])
+    subprocess.run(["qbittorrent-nox"])
 
 # roda o app
 def run():
