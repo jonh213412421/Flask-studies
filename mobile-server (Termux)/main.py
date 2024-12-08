@@ -202,6 +202,25 @@ def video_stream(magnet):
                     print(video)
             return render_template('index2.html', video_path=video)
 
+def tor_status():
+    conn_info = dict(
+        host="localhost",
+        port=8080,
+        username="admin",
+        password="123321",
+    )
+
+    qbt_client = qbittorrentapi.Client(**conn_info)
+    a = qbt_client.torrents.info()
+    while True:
+        for tor in a:
+            yield f"data: {tor['name']} - {tor['progress']*100:.2f}%\n\n"
+            time.sleep(5)
+
+@app.route('/torrent_status')
+def torrent_progress():
+    return Response(tor_status(), content_type='text/event-stream')
+
 if __name__ == '__main__':
     # múltiplas threads
     thread1 = threading.Thread(target=init)
