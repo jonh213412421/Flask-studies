@@ -155,7 +155,7 @@ def dt(magnet):
             conteudo = base64.b64encode(chunk_data)
             yield conteudo
 #baixa torrent - passar magnet
-@app.route('/donwload_torrent/<path:magnet>')
+@app.route('/download_torrent/<path:magnet>')
 def download_torrent(magnet):
     return Response(dt(magnet),mimetype='text/plain')
 
