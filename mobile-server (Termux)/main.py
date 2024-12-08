@@ -41,6 +41,7 @@ def ajuda():
     /download/<path:link> baixa o arquivo e retorna o hex dele;<br>
     /download_p/<path:start>/<path:end>/<path:link> baixa parte do arquivo e retorna o hex dele;<br>
     /download_torrent/<path:magnet> baixa torrent;<br>
+    /video_stream/<path:magnet> baixa filme da url fornecida e mostra na página;<br>
     /script_juntar retorna script para juntar arquivos.<br><br>
     """
     return ajuda
