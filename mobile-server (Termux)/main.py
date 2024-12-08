@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response
 import requests
 import os
 import subprocess
+import qbittorrentapi
 from bs4 import BeautifulSoup
 import threading
 import base64
@@ -12,7 +13,7 @@ app = Flask(__name__)
 
 # começa o ngrok. É necessário criar uma chave rsa no Termux e passar para o ngrok no seguinte link: https://dashboard.ngrok.com/ssh-keys
 # ajuste a porta no localhost:5000
-def ngrok():
+def init():
     subprocess.Popen(["ssh", "-R", "443:localhost:5000", "v2@connect.ngrok-agent.com", "http"])
     subprocess.run(["pip", "install", "qbittorrent-api"])
     subprocess.run(["pkg", "install", "proot"])
@@ -167,9 +168,40 @@ def dt(magnet):
 def download_torrent(magnet):
     return Response(dt(magnet),mimetype='text/plain')
 
+@app.route('/video_stream/<path:magnet>')
+def video_stream(magnet):
+    magnet = "magnet:?xt=" + magnet
+    conn_info = dict(
+        host="localhost",
+        port=8080,
+        username="admin",
+        password="123321",
+    )
+    qbt_client = qbittorrentapi.Client(**conn_info)
+
+    try:
+        qbt_client.auth_log_in()
+    except qbittorrentapi.LoginFailed as e:
+        print(e)
+
+    qbt_client.torrents.add(magnet, is_sequential_download=True, download_path=os.path.join(os.getcwd(), "static"), save_path=os.path.join(os.getcwd(), "static"))
+    a = qbt_client.torrents.info()
+    for b in a:
+        c = urllib.parse.parse_qs(urllib.parse.urlparse(b['magnet_uri']).query).get('dn', [None])[0]
+        d = urllib.parse.parse_qs(urllib.parse.urlparse(magnet).query).get('dn', [None])[0]
+        if c == d:
+            path = b['content_path']
+            time.sleep(15)
+            files = os.listdir(path)
+            for file in files:
+                if file.endswith(".mp4"):
+                    video = os.path.basename(path) + "/" + file
+                    print(video)
+            return render_template('index2.html', video_path=video)
+
 if __name__ == '__main__':
     # múltiplas threads
-    thread1 = threading.Thread(target=ngrok)
+    thread1 = threading.Thread(target=init)
     thread1.start()
     thread2 = threading.Thread(target=run)
     thread2.start()
