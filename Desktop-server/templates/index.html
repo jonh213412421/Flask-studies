@@ -10,7 +10,7 @@
     <h1>Enter Video Path</h1>
     {% if video_path %}
     <h2>Video Player</h2>
-    <video width="640" height="360" controls>
+    <video width="1600" height="900" controls>
         <source src="{{ url_for('static', filename=video_path) }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
