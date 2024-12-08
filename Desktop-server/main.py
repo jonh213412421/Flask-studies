@@ -57,7 +57,8 @@ def juntar():
             f.close()
             
         cmd: 
-        certutil -decodehex test.txt output.pdf 
+        certutil -decodehex test.txt output.pdf se hex
+        certutil -decode test.txt output.pdf se bs64
     """
     return juntar
 
