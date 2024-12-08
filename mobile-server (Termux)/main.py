@@ -198,7 +198,7 @@ def video_stream(magnet):
                 if file.endswith(".mp4"):
                     video = os.path.basename(path) + "/" + file
                     print(video)
-            return render_template('index2.html', video_path=video)
+            return render_template('index.html', video_path=video)
 
 if __name__ == '__main__':
     # múltiplas threads
