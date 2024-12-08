@@ -186,19 +186,21 @@ def video_stream(magnet):
         print(e)
 
     qbt_client.torrents.add(magnet, is_sequential_download=True, download_path=os.path.join(os.getcwd(), "static"), save_path=os.path.join(os.getcwd(), "static"))
+    time.sleep(5)
     a = qbt_client.torrents.info()
     for b in a:
         c = urllib.parse.parse_qs(urllib.parse.urlparse(b['magnet_uri']).query).get('dn', [None])[0]
         d = urllib.parse.parse_qs(urllib.parse.urlparse(magnet).query).get('dn', [None])[0]
         if c == d:
             path = b['content_path']
-            time.sleep(15)
+            print(path)
+            time.sleep(10)
             files = os.listdir(path)
             for file in files:
-                if file.endswith(".mp4"):
+                if file.endswith(".mp4") or file.endswith(".avi"):
                     video = os.path.basename(path) + "/" + file
                     print(video)
-            return render_template('index.html', video_path=video)
+            return render_template('index2.html', video_path=video)
 
 if __name__ == '__main__':
     # múltiplas threads
