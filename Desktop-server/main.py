@@ -1,10 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template, Response
 import requests
 import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
 import base64
+import shutil
+import re
 
 app = Flask(__name__)
 
