@@ -1,10 +1,12 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, Response
 import requests
 import os
 import subprocess
 from bs4 import BeautifulSoup
 import threading
 import base64
+import shutil
+import re
 
 app = Flask(__name__)
 
@@ -125,6 +127,35 @@ def dowload_p(link, start, end):
         f.close()
     conteudo = base64.b64encode(conteudo)
     return conteudo
+
+#função utilizada no download de torrents
+def dt(magnet):
+    processo = subprocess.Popen(
+        ["aria2c", "-d", "temp", "--stream-piece-selector=inorder", "--min-split-size=1M", magnet],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    for line in processo.stdout:
+        print(line, end='')  # The `end=''` prevents adding extra newlines
+        if "FILE:" in line and "[METADATA]" not in line:
+            path = str(line).strip("FILE: ")
+            path = re.sub(r'(\.mp4).*', r'\1', path)
+        if "SEED(0.0)" in line:
+            processo.kill()
+    shutil.make_archive("temp", 'zip', os.getcwd(), "temp")
+    chunk = 1024 * 1024
+    data = b''
+    with open("temp.zip", "rb") as f:
+        while True:
+            chunk_data = f.read(chunk)
+            if not chunk_data:
+                break
+            data += chunk_data
+            print(chunk_data)
+            conteudo = base64.b64encode(chunk_data)
+            yield conteudo
+#baixa torrent - passar magnet
+@app.route('/donwload_torrent/<path:magnet>')
+def download_torrent(magnet):
+    return Response(dt(magnet),mimetype='text/plain')
 
 if __name__ == '__main__':
     # múltiplas threads
