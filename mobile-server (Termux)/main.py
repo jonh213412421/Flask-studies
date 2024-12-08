@@ -31,6 +31,7 @@ def ajuda():
     /tamanho/<path:link> retorna o tamanho do arquivo do link fornecido;<br>
     /download/<path:link> baixa o arquivo e retorna o hex dele;<br>
     /download_p/<path:start>/<path:end>/<path:link> baixa parte do arquivo e retorna o hex dele;<br>
+    /download_torrent/<path:magnet> baixa torrent;<br>
     /script_juntar retorna script para juntar arquivos.<br><br>
     """
     return ajuda
