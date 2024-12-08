@@ -132,19 +132,19 @@ def dowload_p(link, start, end):
 
 #função utilizada no download de torrents
 def dt(magnet):
+    magnet = "magnet:?" + magnet
     processo = subprocess.Popen(
         ["aria2c", "-d", "temp", "--stream-piece-selector=inorder", "--min-split-size=1M", magnet],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     for line in processo.stdout:
-        print(line, end='')  # The `end=''` prevents adding extra newlines
-        if "FILE:" in line and "[METADATA]" not in line:
-            path = str(line).strip("FILE: ")
-            path = re.sub(r'(\.mp4).*', r'\1', path)
+        yield line
         if "SEED(0.0)" in line:
             processo.kill()
     shutil.make_archive("temp", 'zip', os.getcwd(), "temp")
     chunk = 1024 * 1024
     data = b''
+    yield "\n\n"
+    yield "DATA:\n\n"
     with open("temp.zip", "rb") as f:
         while True:
             chunk_data = f.read(chunk)
@@ -154,6 +154,7 @@ def dt(magnet):
             print(chunk_data)
             conteudo = base64.b64encode(chunk_data)
             yield conteudo
+            
 #baixa torrent - passar magnet
 @app.route('/download_torrent/<path:magnet>')
 def download_torrent(magnet):
