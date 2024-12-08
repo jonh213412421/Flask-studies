@@ -34,7 +34,7 @@ def ajuda():
     ajuda = r"""
     Funções:<br><br>
     /math/path:expression retorna o resultado da expressão;<br>
-    /scrape/<path:url> retorna url;<br>
+    /nav/<path:url> retorna url;<br>
     /upload/<path:file> faz upload de arquivo local em hex;<br>
     /ls lista arquivos locais;<br>
     /tamanho/<path:link> retorna o tamanho do arquivo do link fornecido;<br>
@@ -73,7 +73,7 @@ def juntar():
     return juntar
 
 # Rota para scrape. Tentar usar curl no futuro
-@app.route('/scrape/<path:url>')
+@app.route('/nav/<path:url>')
 def scrape_page(url):
     url = "https://" + url
     try:
