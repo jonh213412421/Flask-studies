@@ -4,7 +4,6 @@ import urllib.parse
 from flask import Flask, render_template, Response
 import requests
 import os
-import subprocess
 from pyngrok import ngrok
 from bs4 import BeautifulSoup
 import threading
@@ -12,16 +11,14 @@ import base64
 import shutil
 
 app = Flask(__name__)
-http_tunnel = ngrok.connect(5000)
+http_tunnel = ngrok.connect("5000")
 print(f"url:{http_tunnel.public_url}")
 
 # roda o app
 def run():
-    app.run()
+    #alterar de acordo com a necessidade
+    app.run("::", 5000)
 
-
-# ajuda
-@app.route('/h')
 def ajuda():
     ajuda = r"""
     Funções:<br><br>
@@ -38,6 +35,11 @@ def ajuda():
     """
     return ajuda
 
+# página inicial
+@app.route('/')
+def idx():
+    return Response(ajuda(), mimetype='text/plain')
+
 
 # calculadora
 @app.route('/math/<path:expression>')
@@ -47,7 +49,7 @@ def math(expression):
     return resultado
 
 
-# script para juntar arquivos. Testar
+# script para juntar arquivos.
 @app.route('/script_juntar')
 def juntar():
     juntar = r"""
@@ -144,34 +146,27 @@ def dowload_p(link, start, end):
 
 # função utilizada no download de torrents
 def dt(magnet):
-    magnet = "magnet:?" + magnet
-    processo = subprocess.Popen(
-        ["aria2c", "-d", "temp", "--stream-piece-selector=inorder", "--min-split-size=1M", magnet],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    for line in processo.stdout:
-        yield line
-        if "SEED(0.0)" in line:
-            processo.kill()
-    shutil.make_archive("temp", 'zip', os.getcwd(), "temp")
-    chunk = 1024 * 1024
-    data = b''
-    yield "\n\n"
-    yield "DATA:\n\n"
-    with open("temp.zip", "rb") as f:
-        while True:
-            chunk_data = f.read(chunk)
-            if not chunk_data:
-                break
-            data += chunk_data
-            print(chunk_data)
-            conteudo = base64.b64encode(chunk_data)
-            yield conteudo
+    magnet = "magnet:?xt=" + magnet
+    conn_info = dict(
+        host="localhost",
+        port=8080,
+        username="admin",
+        password="123321",
+    )
+    qbt_client = qbittorrentapi.Client(**conn_info)
+
+    try:
+        qbt_client.auth_log_in()
+    except qbittorrentapi.LoginFailed as e:
+        print(e)
+    qbt_client.torrents.add(magnet, is_sequential_download=True, download_path=os.path.join(os.getcwd(), "static"), save_path=os.path.join(os.getcwd(), "static"))
 
 
 # baixa torrent - passar magnet
-@app.route('/donwload_torrent/<path:magnet>')
+@app.route('/download_torrent/<path:magnet>')
 def download_torrent(magnet):
     return Response(dt(magnet), mimetype='text/plain')
+
 
 @app.route('/video_stream/<path:magnet>')
 def video_dw(magnet):
@@ -190,12 +185,12 @@ def video_dw(magnet):
         print(e)
 
     qbt_client.torrents.add(magnet, is_sequential_download=True, download_path=os.path.join(os.getcwd(), "static"), save_path=os.path.join(os.getcwd(), "static"))
-    a = qbt_client.torrents.info()
-    for b in a:
-        c = urllib.parse.parse_qs(urllib.parse.urlparse(b['magnet_uri']).query).get('dn', [None])[0]
-        d = urllib.parse.parse_qs(urllib.parse.urlparse(magnet).query).get('dn', [None])[0]
-        if c == d:
-            path = b['content_path']
+    torrents = qbt_client.torrents.info()
+    for torrent in torrents:
+        magnet_torrent = urllib.parse.parse_qs(urllib.parse.urlparse(torrent['magnet_uri']).query).get('dn', [None])[0]
+        magnet_variable = urllib.parse.parse_qs(urllib.parse.urlparse(magnet).query).get('dn', [None])[0]
+        if magnet_torrent == magnet_variable:
+            path = torrent['content_path']
             print(path)
             files = os.listdir(path)
             for file in files:
@@ -205,7 +200,8 @@ def video_dw(magnet):
             #https://en.yts-official.mx/movies
             return render_template('index2.html', video_path=video)
 
-def tor_status():
+
+def torrent_status():
     conn_info = dict(
         host="localhost",
         port=8080,
@@ -217,16 +213,42 @@ def tor_status():
     a = qbt_client.torrents.info()
     while True:
         for tor in a:
-            yield f"data: {tor['name']} - {tor['progress']*100:.2f}%\n\n"
+            yield f"torrents: {tor['name']} - {tor['progress']*100:.2f}% - {tor['content_path']}\n\n"
             time.sleep(5)
 
 @app.route('/torrent_status')
 def torrent_progress():
-    return Response(tor_status(), content_type='text/event-stream')
+    return Response(torrent_status(), content_type='text/event-stream')
+
+
+def gt(torrent):
+    yield "Carregando..."
+    torrent = os.path.join("static", torrent)
+    print(torrent)
+    shutil.make_archive("temp", 'zip', os.getcwd(), torrent)
+    chunk = 1024 * 1024
+    arquivo = "temp.zip"
+    yield "\n\n"
+    yield "DATA (b64):\n\n"
+    try:
+        with open(arquivo, "rb") as f:
+            while True:
+                chunk_data = f.read(chunk)
+                if not chunk_data:
+                    break
+                conteudo = base64.b64encode(chunk_data)
+                print(conteudo)
+                yield conteudo
+        os.remove(arquivo)
+    except Exception as e:
+        yield e
+
+@app.route('/get_torrent/<path:torrent>')
+def get_torrent(torrent):
+    return Response(gt(torrent), mimetype='application/octet-stream')
 
 if __name__ == '__main__':
     # múltiplas threads
     thread = threading.Thread(target=run)
     thread.start()
     thread.join()
-    
